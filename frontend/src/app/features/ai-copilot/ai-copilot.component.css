@@ -1,0 +1,339 @@
+.copilot-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.operator-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #172554;
+  border: 1px solid #1e40af;
+  color: #93c5fd;
+  padding: 0.85rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.operator-alert mat-icon {
+  color: #60a5fa;
+  font-size: 1.4rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  flex-shrink: 0;
+}
+
+.copilot-card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+}
+
+.copilot-avatar {
+  background: #1e3a8a;
+  color: #60a5fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.copilot-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.quick-prompts-section {
+  margin-top: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 0.85rem 1rem;
+  background: #0b1120;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+}
+
+.quick-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 0.65rem;
+}
+
+.label-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  color: #f59e0b;
+}
+
+.chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.quick-chip {
+  font-size: 0.8rem;
+  border-radius: 20px;
+  padding: 0.2rem 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quick-chip mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.red-chip {
+  border-color: #ef444455;
+  color: #fca5a5;
+  background: #ef444415;
+}
+.red-chip:hover {
+  background: #ef444430;
+  border-color: #ef4444;
+}
+
+.amber-chip {
+  border-color: #f59e0b55;
+  color: #fcd34d;
+  background: #f59e0b15;
+}
+.amber-chip:hover {
+  background: #f59e0b30;
+  border-color: #f59e0b;
+}
+
+.blue-chip {
+  border-color: #3b82f655;
+  color: #93c5fd;
+  background: #3b82f615;
+}
+.blue-chip:hover {
+  background: #3b82f630;
+  border-color: #3b82f6;
+}
+
+.purple-chip {
+  border-color: #a855f755;
+  color: #d8b4fe;
+  background: #a855f715;
+}
+.purple-chip:hover {
+  background: #a855f730;
+  border-color: #a855f7;
+}
+
+.teal-chip {
+  border-color: #14b8a655;
+  color: #5eead4;
+  background: #14b8a615;
+}
+.teal-chip:hover {
+  background: #14b8a630;
+  border-color: #14b8a6;
+}
+
+.green-chip {
+  border-color: #10b98155;
+  color: #6ee7b7;
+  background: #10b98115;
+}
+.green-chip:hover {
+  background: #10b98130;
+  border-color: #10b981;
+}
+
+.instruction-form {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.prompt-field {
+  flex: 1;
+}
+
+.chat-icon {
+  color: #38bdf8;
+}
+
+.btn-send {
+  height: 56px;
+  padding: 0 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spinning {
+  animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loader-bar {
+  margin-top: 0.5rem;
+  border-radius: 4px;
+}
+
+.response-card {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 12px;
+}
+
+.agent-avatar {
+  background: #065f46;
+  color: #34d399;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.response-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #f8fafc;
+  flex-wrap: wrap;
+}
+
+.mcp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #1e1b4b;
+  color: #a5b4fc;
+  border: 1px solid #4338ca;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-family: monospace;
+}
+
+.badge-icon {
+  font-size: 0.85rem;
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.intent-badge {
+  background: #1e293b;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-family: monospace;
+}
+
+.cot-section {
+  background: #0b1120;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.cot-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.cot-icon {
+  color: #38bdf8;
+  font-size: 1.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.cot-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cot-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  list-style-type: none;
+}
+
+.cot-step {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  position: relative;
+}
+
+.content-divider {
+  margin: 1.25rem 0;
+  border-top-color: #1e293b;
+}
+
+.agent-narrative {
+  background: #1e293b44;
+  border-radius: 8px;
+  padding: 1.25rem;
+  border-left: 4px solid #10b981;
+}
+
+.narrative-text {
+  color: #f1f5f9;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.action-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #1e293b;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.footer-target {
+  font-size: 0.82rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.target-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  color: #94a3b8;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}

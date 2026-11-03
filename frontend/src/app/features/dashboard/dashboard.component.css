@@ -1,0 +1,135 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.metric-card {
+  padding: 0.5rem 0.25rem;
+  border: 1px solid #1e293b !important;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  border-color: #38bdf8 !important;
+}
+
+.alert-card {
+  border-color: rgba(239, 68, 68, 0.4) !important;
+}
+
+.card-icon-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+}
+
+.card-icon-avatar.blue { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+.card-icon-avatar.purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+.card-icon-avatar.green { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+.card-icon-avatar.amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+
+.metric-title {
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #94a3b8 !important;
+}
+
+.metric-sub {
+  font-size: 0.75rem !important;
+  color: #64748b !important;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #f8fafc;
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.text-alert {
+  color: #ef4444;
+}
+
+.table-card {
+  border: 1px solid #1e293b !important;
+  overflow: hidden;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem 0.75rem 1.5rem;
+  border-bottom: 1px solid #1e293b;
+}
+
+.badge-total {
+  background: #1e293b;
+  color: #38bdf8;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #334155;
+}
+
+.table-content {
+  padding: 0 !important;
+  overflow-x: auto;
+}
+
+.k8s-table {
+  width: 100%;
+}
+
+.pod-name {
+  color: #38bdf8;
+  font-size: 0.9rem;
+}
+
+.ns-chip {
+  background: #1e293b !important;
+  color: #cbd5e1 !important;
+  font-size: 0.75rem !important;
+  min-height: 24px !important;
+  padding: 0 8px !important;
+}
+
+.exit-code {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.text-muted {
+  color: #475569;
+}
+
+.text-warning {
+  color: #f59e0b;
+  font-weight: bold;
+}
+
+.btn-diagnose {
+  font-size: 0.8rem !important;
+  border-radius: 6px !important;
+}
+
+.row-troubled {
+  background-color: rgba(239, 68, 68, 0.04) !important;
+}

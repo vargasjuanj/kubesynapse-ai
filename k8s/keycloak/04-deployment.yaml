@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-deployment
+  namespace: keycloak
+  labels:
+    app: keycloak
+    app.kubernetes.io/name: keycloak
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      initContainers:
+      - name: init-permissions
+        image: busybox:1.36
+        command: ["sh", "-c", "mkdir -p /opt/keycloak/data && chown -R 1000:1000 /opt/keycloak/data"]
+        volumeMounts:
+        - name: keycloak-storage
+          mountPath: /opt/keycloak/data
+      containers:
+      - name: keycloak
+        image: quay.io/keycloak/keycloak:25.0.2
+        args: ["start-dev", "--import-realm"]
+        env:
+        - name: KEYCLOAK_ADMIN
+          value: "admin"
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          value: "admin"
+        - name: KC_HEALTH_ENABLED
+          value: "true"
+        - name: KC_METRICS_ENABLED
+          value: "true"
+        - name: KC_HTTP_RELATIVE_PATH
+          value: "/"
+        ports:
+        - name: http
+          containerPort: 8080
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: keycloak-storage
+          mountPath: /opt/keycloak/data
+        - name: realm-config-volume
+          mountPath: /opt/keycloak/data/import/kubesynapse-realm.json
+          subPath: kubesynapse-realm.json
+      volumes:
+      - name: keycloak-storage
+        persistentVolumeClaim:
+          claimName: keycloak-data-pvc
+      - name: realm-config-volume
+        configMap:
+          name: keycloak-realm-config

@@ -1,0 +1,187 @@
+<div class="copilot-container">
+  <!-- Alerta de Modo Operador si aplica -->
+  <div *ngIf="!authService.isAdmin()" class="operator-alert font-mono">
+    <mat-icon>shield</mat-icon>
+    <span>
+      Modo <strong>ROLE_OPERATOR</strong>: Puedes realizar diagnósticos y consultas en lenguaje natural. Las instrucciones que soliciten mutaciones en el clúster (crear pods, reiniciar o inyectar labs) serán rechazadas por la guardia de seguridad RBAC.
+    </span>
+  </div>
+
+  <!-- Tarjeta Principal de Instrucciones -->
+  <mat-card class="copilot-card">
+    <mat-card-header>
+      <div mat-card-avatar class="copilot-avatar">
+        <mat-icon>smart_toy</mat-icon>
+      </div>
+      <div class="header-titles">
+        <mat-card-title class="copilot-title">
+          Kube-CKA-AI-Assistant — Asistente Inteligente Kubernetes
+        </mat-card-title>
+        <mat-card-subtitle>
+          Escribí en lenguaje sencillo qué necesitás revisar o solucionar en el clúster.
+        </mat-card-subtitle>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content class="copilot-content">
+      <!-- Prompts Rápidos de 1 Clic -->
+      <div class="quick-prompts-section">
+        <span class="quick-label"><mat-icon class="label-icon">bolt</mat-icon> Consultas y acciones rápidas:</span>
+        <div class="chips-row">
+          <button
+            type="button"
+            mat-stroked-button
+            class="quick-chip blue-chip"
+            (click)="setPrompt('¿Cómo se llama el nodo?')">
+            <mat-icon>dns</mat-icon> ¿Cómo se llama el nodo?
+          </button>
+          <button
+            type="button"
+            mat-stroked-button
+            class="quick-chip red-chip"
+            (click)="setPrompt('Revisá el pod demo-oomkilled-service en default y decime por qué falló')">
+            <mat-icon>memory</mat-icon> Revisar OOMKilled (demo-oomkilled-service)
+          </button>
+          <button
+            type="button"
+            mat-stroked-button
+            class="quick-chip amber-chip"
+            (click)="setPrompt('Verificá por qué está crasheando el pod demo-crashloop-service')">
+            <mat-icon>sync_problem</mat-icon> Diagnosticar CrashLoop (demo-crashloop-service)
+          </button>
+          <button
+            type="button"
+            mat-stroked-button
+            class="quick-chip teal-chip"
+            [disabled]="!authService.isAdmin()"
+            [matTooltip]="authService.isAdmin() ? 'Inyecta escenario CKA' : '🔒 Requiere ROLE_ADMIN'"
+            (click)="setPrompt('Creame un ejercicio de troubleshooting de CKA con OOMKilled')">
+            <mat-icon>{{ authService.isAdmin() ? 'science' : 'lock' }}</mat-icon> 🧪 Inyectar Ejercicio CKA (OOMKilled)
+          </button>
+          <button
+            type="button"
+            mat-stroked-button
+            class="quick-chip purple-chip"
+            [disabled]="!authService.isAdmin()"
+            [matTooltip]="authService.isAdmin() ? 'Inyecta escenario CKA' : '🔒 Requiere ROLE_ADMIN'"
+            (click)="setPrompt('Creame un ejercicio de troubleshooting de CKA con CrashLoop')">
+            <mat-icon>{{ authService.isAdmin() ? 'bug_report' : 'lock' }}</mat-icon> 💥 Inyectar Ejercicio CKA (CrashLoop)
+          </button>
+          <button
+            type="button"
+            mat-stroked-button
+            class="quick-chip green-chip"
+            [disabled]="!authService.isAdmin()"
+            [matTooltip]="authService.isAdmin() ? 'Crea pod en clúster' : '🔒 Requiere ROLE_ADMIN'"
+            (click)="setPrompt('Creá un pod nginx en el namespace dev')">
+            <mat-icon>{{ authService.isAdmin() ? 'add_circle' : 'lock' }}</mat-icon> 🚀 Crear Pod (dev/nginx)
+          </button>
+          <button
+            type="button"
+            mat-stroked-button
+            class="quick-chip blue-chip"
+            (click)="setPrompt('¿Cómo está el estado de salud general del clúster?')">
+            <mat-icon>health_and_safety</mat-icon> Chequeo Salud Clúster
+          </button>
+          <button
+            type="button"
+            mat-stroked-button
+            class="quick-chip red-chip"
+            [disabled]="!authService.isAdmin()"
+            [matTooltip]="authService.isAdmin() ? 'Limpia pods de labs CKA' : '🔒 Requiere ROLE_ADMIN'"
+            (click)="setPrompt('Limpiar el laboratorio cka')">
+            <mat-icon>{{ authService.isAdmin() ? 'delete_sweep' : 'lock' }}</mat-icon> 🧹 Limpiar Laboratorio CKA
+          </button>
+        </div>
+      </div>
+
+      <!-- Input de Instrucción -->
+      <form (ngSubmit)="sendInstruction()" class="instruction-form">
+        <mat-form-field appearance="outline" class="prompt-field">
+          <mat-label>Escribe tu instrucción o pregunta para el agente...</mat-label>
+          <input
+            matInput
+            [(ngModel)]="promptInput"
+            name="promptInput"
+            placeholder="Ej: Revisá el pod demo-oomkilled-service y decime cómo solucionarlo..."
+            [disabled]="isLoading"
+            autocomplete="off" />
+          <mat-icon matSuffix class="chat-icon">chat</mat-icon>
+        </mat-form-field>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="btn-send"
+          [disabled]="isLoading || !promptInput.trim()">
+          <mat-icon *ngIf="!isLoading">send</mat-icon>
+          <mat-icon *ngIf="isLoading" class="spinning">sync</mat-icon>
+          <span>{{ isLoading ? 'Analizando...' : 'Enviar al Agente' }}</span>
+        </button>
+      </form>
+
+      <mat-progress-bar *ngIf="isLoading" mode="indeterminate" color="accent" class="loader-bar"></mat-progress-bar>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Panel de Respuesta del Agente -->
+  <mat-card class="response-card" *ngIf="lastResponse">
+    <mat-card-header class="response-header">
+      <div mat-card-avatar class="agent-avatar">
+        <mat-icon>psychology</mat-icon>
+      </div>
+      <mat-card-title class="response-title">
+        <span>Resolución de KubeGuardian AI</span>
+        <span class="mcp-badge" *ngIf="lastResponse.toolInvoked">
+          <mat-icon class="badge-icon">handyman</mat-icon>
+          MCP Tool: {{ lastResponse.toolInvoked }}
+        </span>
+        <span class="intent-badge" *ngIf="lastResponse.intent">
+          {{ lastResponse.intent }}
+        </span>
+      </mat-card-title>
+      <mat-card-subtitle class="font-mono">
+        Instrucción del operador: "{{ lastResponse.userPrompt }}"
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content class="response-content">
+      <!-- Bloque de Razonamiento Chain-of-Thought -->
+      <div class="cot-section" *ngIf="lastResponse.thoughtProcess && lastResponse.thoughtProcess.length > 0">
+        <div class="cot-header">
+          <mat-icon class="cot-icon">alt_route</mat-icon>
+          <span class="cot-title">Traza de Razonamiento del Agente (Chain-of-Thought)</span>
+        </div>
+        <ul class="cot-list">
+          <li *ngFor="let step of lastResponse.thoughtProcess" class="cot-step font-mono">
+            {{ step }}
+          </li>
+        </ul>
+      </div>
+
+      <mat-divider class="content-divider"></mat-divider>
+
+      <!-- Respuesta Conversacional y Accionable -->
+      <div class="agent-narrative">
+        <div class="narrative-text" [innerHTML]="formatMarkdown(lastResponse.agentResponse)"></div>
+      </div>
+
+      <!-- Acciones sugeridas de 1 clic -->
+      <div class="action-footer" *ngIf="lastResponse.targetResource">
+        <span class="footer-target font-mono">
+          <mat-icon class="target-icon">hub</mat-icon> Recurso: {{ lastResponse.targetResource }}
+        </span>
+        <div class="footer-buttons">
+          <button
+            mat-stroked-button
+            color="accent"
+            *ngIf="lastResponse.intent === 'DIAGNOSE_POD'"
+            (click)="onNavigateToDiagnostic.emit(lastResponse.targetResource)">
+            <mat-icon>build</mat-icon> Abrir en Diagnóstico y Reparar
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

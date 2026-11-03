@@ -1,0 +1,41 @@
+<mat-toolbar class="navbar">
+  <div class="brand">
+    <mat-icon class="logo-icon">shield</mat-icon>
+    <div class="titles">
+      <div class="main-title">
+        <h1>Kube-CKA-AI-Assistant <span class="badge-ai">v1.0.0</span></h1>
+      </div>
+      <p class="subtitle">Autonomous Kubernetes (CKA) Operations & AI SRE Assistant (Java 21 / Spring Boot 3)</p>
+    </div>
+  </div>
+
+  <div class="actions">
+    <!-- Indicador de Clúster Minikube -->
+    <div class="status-indicator">
+      <span class="status-dot"></span>
+      <span class="status-text font-mono">Minikube v1.35.1 [Connected]</span>
+    </div>
+
+    <!-- Perfil de Usuario y Rol Keycloak Activo (RBAC) -->
+    <div class="user-badge" [ngClass]="authService.isAdmin() ? 'admin-badge' : 'operator-badge'"
+         [matTooltip]="authService.getCurrentUser().description">
+      <mat-icon class="user-icon">{{ authService.isAdmin() ? 'admin_panel_settings' : 'visibility' }}</mat-icon>
+      <div class="user-info">
+        <span class="user-name">{{ authService.getCurrentUser().fullName }}</span>
+        <span class="user-role font-mono">[{{ authService.getCurrentUser().role }}]</span>
+      </div>
+      <button mat-icon-button class="btn-switch-role"
+              (click)="toggleRole()"
+              matTooltip="Alternar entre ROLE_ADMIN y ROLE_OPERATOR">
+        <mat-icon>swap_horiz</mat-icon>
+      </button>
+    </div>
+
+    <!-- Botón de Refresco -->
+    <button mat-flat-button color="primary" class="btn-refresh" (click)="onRefresh.emit()" [disabled]="isLoading">
+      <mat-icon [class.spinning]="isLoading">sync</mat-icon>
+      Refrescar Clúster
+    </button>
+  </div>
+</mat-toolbar>
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate" color="accent"></mat-progress-bar>

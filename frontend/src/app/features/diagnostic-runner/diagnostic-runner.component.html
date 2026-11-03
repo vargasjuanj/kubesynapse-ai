@@ -1,0 +1,114 @@
+<div class="runner-container">
+  <!-- Formulario de Petición con MatCard y MatFormField -->
+  <mat-card class="form-card">
+    <mat-card-header>
+      <div mat-card-avatar class="header-avatar">
+        <mat-icon>manage_search</mat-icon>
+      </div>
+      <mat-card-title>Diagnóstico Inteligente de Incidentes</mat-card-title>
+      <mat-card-subtitle>Inspección automatizada de telemetría de pods y análisis asistido por IA</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content class="form-content">
+      <form (ngSubmit)="submitDiagnostic()" class="diagnostic-form">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Namespace de Kubernetes</mat-label>
+          <input matInput [(ngModel)]="namespace" name="namespace" placeholder="default / kube-system" required />
+          <mat-icon matSuffix>folder</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Nombre del Pod</mat-label>
+          <input matInput [(ngModel)]="podName" name="podName" placeholder="demo-oomkilled-service" required />
+          <mat-icon matSuffix>view_in_ar</mat-icon>
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" type="submit" class="btn-submit" [disabled]="isLoading || !podName">
+          <mat-icon *ngIf="!isLoading">auto_awesome</mat-icon>
+          <mat-icon *ngIf="isLoading" class="spinning">sync</mat-icon>
+          {{ isLoading ? 'Analizando...' : 'Ejecutar Diagnóstico' }}
+        </button>
+      </form>
+      <mat-progress-bar *ngIf="isLoading" mode="indeterminate" color="accent" class="loader-bar"></mat-progress-bar>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tarjeta de Carga Activa (Evita ver datos de pods anteriores) -->
+  <mat-card class="loading-report-card" *ngIf="isLoading">
+    <mat-card-content class="loading-content">
+      <mat-icon class="spinning loading-icon">sync</mat-icon>
+      <div class="loading-texts">
+        <h3 class="loading-title">Analizando pod {{ podName }} en namespace {{ namespace }}...</h3>
+        <p class="loading-sub font-mono">Consultando eventos, fallos de cgroups, Exit Code y registros en el clúster Minikube...</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tarjeta del Informe de Diagnóstico con Angular Material -->
+  <mat-card class="report-card" *ngIf="report && !isLoading">
+    <mat-card-header class="report-header">
+      <div mat-card-avatar class="report-avatar">
+        <mat-icon>bug_report</mat-icon>
+      </div>
+      <mat-card-title class="report-title">
+        <span class="incident-id font-mono">{{ report.incidentId }}</span>
+        <span class="pod-title font-mono">{{ report.podName }}</span>
+      </mat-card-title>
+      <mat-card-subtitle class="font-mono">Namespace: {{ report.namespace }} | Analizado: {{ report.analyzedAt | date:'medium' }}</mat-card-subtitle>
+      <div class="badge-wrapper">
+        <app-severity-badge [severity]="report.severity"></app-severity-badge>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content class="report-body">
+      <!-- Causa Raíz Detectada -->
+      <div class="report-section highlight-box">
+        <div class="section-title-row">
+          <mat-icon class="icon-warning">crisis_alert</mat-icon>
+          <h4>Causa Raíz Detectada</h4>
+        </div>
+        <p class="root-cause-text">{{ report.rootCause }}</p>
+        <div class="tech-details font-mono" *ngIf="report.technicalDetails">
+          <strong>Evidencia Técnica:</strong> {{ report.technicalDetails }}
+        </div>
+      </div>
+
+      <!-- Recomendación de la IA -->
+      <div class="report-section ai-box">
+        <div class="section-title-row">
+          <mat-icon class="icon-ai">psychology</mat-icon>
+          <h4>Recomendación del Asistente de IA</h4>
+        </div>
+        <pre class="ai-text">{{ report.aiRecommendation }}</pre>
+      </div>
+
+      <!-- Remediaciones Sugeridas -->
+      <div class="report-section">
+        <div class="section-title-row">
+          <mat-icon class="icon-tools">build</mat-icon>
+          <h4>Plan de Mitigación Sugerido</h4>
+        </div>
+        <ul class="remediation-list">
+          <li *ngFor="let rem of report.suggestedRemediations" class="font-mono">
+            <mat-icon class="step-check">check_circle</mat-icon>
+            <span>{{ rem }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Pasos de Verificación Ejecutados -->
+      <div class="report-section">
+        <div class="section-title-row">
+          <mat-icon class="icon-chain">alt_route</mat-icon>
+          <h4>Pasos de Verificación Ejecutados</h4>
+        </div>
+        <div class="trail-container">
+          <div *ngFor="let step of report.pipelineTrail; let idx = index" class="trail-step font-mono">
+            <span class="step-number">{{ idx + 1 }}</span>
+            <span>{{ step }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,96 @@
+<div class="app-layout">
+  <!-- Barra Superior -->
+  <app-header [isLoading]="(isLoading$ | async) ?? false" (onRefresh)="loadClusterData()"></app-header>
+
+  <!-- Aviso si el usuario es Operador (Solo lectura) -->
+  <div *ngIf="!authService.isAdmin()" class="global-operator-banner font-mono">
+    <div class="banner-content">
+      <mat-icon class="banner-icon">lock</mat-icon>
+      <span class="banner-text">
+        <strong>MODO OPERADOR (Solo lectura):</strong> Podés ver el clúster, consultar a la IA y evaluar laboratorios. Las acciones para modificar recursos (crear pods, reiniciar o inyectar fallas) requieren rol de Administrador.
+      </span>
+      <button mat-flat-button class="btn-switch-admin" (click)="switchToAdmin()">
+        Cambiar a Administrador
+      </button>
+    </div>
+  </div>
+
+  <!-- Pestañas Principales (Solo 4, claras y directas) -->
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex" class="nav-tab-group" animationDuration="200ms">
+    
+    <!-- Pestaña 1: Asistente CKA AI -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon copilot-tab-icon">smart_toy</mat-icon>
+        <span class="copilot-tab-title">Asistente CKA AI</span>
+      </ng-template>
+      <div class="tab-body-container">
+        <app-ai-copilot
+          [isLoading]="(isLoading$ | async) ?? false"
+          [lastResponse]="agentResponse"
+          (onInstruct)="handleAgentInstruction($event)"
+          (onNavigateToDiagnostic)="navigateToDiagnosticTab($event)">
+        </app-ai-copilot>
+      </div>
+    </mat-tab>
+
+    <!-- Pestaña 2: Estado del Clúster -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">dashboard</mat-icon>
+        <span>Estado del Clúster</span>
+      </ng-template>
+      <div class="tab-body-container">
+        <app-dashboard
+          [overview]="overview"
+          [pods]="pods"
+          (onSelectPod)="onPodSelectedFromDashboard($event)">
+        </app-dashboard>
+      </div>
+    </mat-tab>
+
+    <!-- Pestaña 3: Diagnosticar y Reparar (Unificada, sin ventanas de más) -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">build</mat-icon>
+        <span>Diagnosticar y Reparar</span>
+      </ng-template>
+      <div class="tab-body-container ops-unified-container">
+        <!-- 1. Analizar el Pod -->
+        <app-diagnostic-runner
+          [namespace]="selectedNamespace"
+          [podName]="selectedPodName"
+          [report]="currentReport"
+          [isLoading]="(isLoading$ | async) ?? false"
+          (onRunDiagnostic)="runDiagnostic($event)">
+        </app-diagnostic-runner>
+
+        <!-- 2. Arreglarlo de inmediato y ver el historial -->
+        <div class="repair-section-divider"></div>
+        <app-remediation-console
+          [history]="remediationHistory"
+          [restartNamespace]="selectedNamespace"
+          [restartPodName]="selectedPodName"
+          (onRestart)="handleRestart($event)"
+          (onUndo)="handleUndo()">
+        </app-remediation-console>
+      </div>
+    </mat-tab>
+
+    <!-- Pestaña 4: Simulador CKA -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon cka-tab-icon">school</mat-icon>
+        <span class="cka-tab-title">Simulador CKA</span>
+      </ng-template>
+      <div class="tab-body-container">
+        <app-cka-simulator></app-cka-simulator>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!-- Pie de Página -->
+  <footer class="app-footer">
+    <p>KubeGuardian AI &copy; 2026 — Desarrollado por <strong>Juan Vargas</strong> | Spring Boot 3, Angular 18 Material & Kubernetes Minikube</p>
+  </footer>
+</div>

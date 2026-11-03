@@ -1,0 +1,18 @@
+# Perfil: LOCAL (Desarrollo y Pruebas en Minikube Local)
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/kubedb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/kubesynapse_cka
+  rabbitmq:
+    host: localhost
+    port: 5672
+
+kubesynapse:
+  messaging:
+    rabbitmq:
+      enabled: true

@@ -1,0 +1,21 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: kube-cka-alert-service
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
+
+alertservice:
+  deduplication-window-seconds: 60
+  queue-name: k8s.incidents.queue
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

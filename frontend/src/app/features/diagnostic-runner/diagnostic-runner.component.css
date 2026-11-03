@@ -1,0 +1,261 @@
+.runner-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-card {
+  border: 1px solid #1e293b !important;
+  padding: 0.5rem 0.25rem;
+}
+
+.header-avatar {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.form-content {
+  margin-top: 1rem;
+}
+
+.diagnostic-form {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.form-field {
+  flex: 1;
+  min-width: 240px;
+}
+
+.btn-submit {
+  height: 56px;
+  padding: 0 1.75rem !important;
+  font-weight: 600;
+  border-radius: 8px !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 22px;
+}
+
+.loader-bar {
+  margin-top: -10px;
+}
+
+.report-card {
+  border: 1px solid #1e293b !important;
+  padding: 0.5rem 0.25rem;
+}
+
+.report-header {
+  position: relative;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #1e293b;
+}
+
+.report-avatar {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.report-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.incident-id {
+  background: #1e293b;
+  color: #94a3b8;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.pod-title {
+  color: #38bdf8;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.badge-wrapper {
+  margin-left: auto;
+}
+
+.report-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 1.25rem !important;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.section-title-row h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.icon-warning { color: #f87171; }
+.icon-ai { color: #a855f7; }
+.icon-tools { color: #38bdf8; }
+.icon-chain { color: #34d399; }
+
+.highlight-box {
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.root-cause-text {
+  color: #fca5a5;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.tech-details {
+  background: #090d16;
+  border: 1px solid #1e293b;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+}
+
+.ai-box {
+  background: rgba(168, 85, 247, 0.05);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.ai-text {
+  white-space: pre-wrap;
+  font-family: inherit;
+  color: #e2e8f0;
+  line-height: 1.6;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.remediation-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.remediation-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #090d16;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #1e293b;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}
+
+.step-check {
+  color: #22c55e;
+  font-size: 1.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.trail-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.trail-step {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #090d16;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  border: 1px solid #1e293b;
+}
+
+.step-number {
+  background: #1e293b;
+  color: #38bdf8;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+.loading-report-card {
+  background: #0b1120 !important;
+  border: 1px dashed #38bdf8 !important;
+  border-radius: 10px;
+  padding: 1.5rem !important;
+}
+
+.loading-content {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.loading-icon {
+  font-size: 2.2rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  color: #38bdf8;
+}
+
+.loading-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.loading-sub {
+  margin: 4px 0 0 0;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+

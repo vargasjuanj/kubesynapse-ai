@@ -1,0 +1,112 @@
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #090d16;
+}
+
+.global-operator-banner {
+  background: linear-gradient(90deg, #1e1b4b, #172554);
+  border-bottom: 1px solid #3b82f6;
+  padding: 0.65rem 2rem;
+  color: #bfdbfe;
+  font-size: 0.8rem;
+}
+
+.banner-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.banner-icon {
+  color: #60a5fa;
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  flex-shrink: 0;
+}
+
+.banner-text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.banner-text strong {
+  color: #93c5fd;
+}
+
+.btn-switch-admin {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  border-radius: 6px !important;
+  padding: 0 12px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  white-space: nowrap;
+}
+
+.nav-tab-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.tab-icon {
+  margin-right: 8px;
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  vertical-align: middle;
+}
+
+.copilot-tab-icon {
+  color: #38bdf8;
+}
+
+.copilot-tab-title {
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.cka-tab-icon {
+  color: #facc15;
+}
+
+.cka-tab-title {
+  font-weight: 700;
+  color: #facc15;
+}
+
+.tab-body-container {
+  padding: 1.75rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ops-unified-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.repair-section-divider {
+  border-top: 1px dashed #334155;
+  margin: 0.5rem 0;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 1.25rem;
+  color: #64748b;
+  font-size: 0.8rem;
+  border-top: 1px solid #1e293b;
+  background: #0b1120;
+}

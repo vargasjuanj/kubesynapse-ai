@@ -1,0 +1,86 @@
+/* ==========================================================================
+   ANGULAR MATERIAL M3 THEME & GLOBAL DESIGN SYSTEM
+   ========================================================================== */
+@import '@angular/material/prebuilt-themes/cyan-orange.css';
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* Reset & Global Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #090d16;
+  color: #f1f5f9;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+code, pre, .font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Material Component Overrides for Cyber-K8s Dark Aesthetic */
+.mat-mdc-card {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border: 1px solid #1e293b !important;
+  border-radius: 12px !important;
+}
+
+.mat-mdc-table {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+.mat-mdc-header-cell {
+  color: #94a3b8 !important;
+  font-weight: 600 !important;
+  border-bottom-color: #1e293b !important;
+}
+
+.mat-mdc-cell {
+  color: #cbd5e1 !important;
+  border-bottom-color: #1e293b !important;
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(56, 189, 248, 0.05) !important;
+}
+
+.mat-mdc-tab-header {
+  background-color: #0b1120 !important;
+  border-bottom: 1px solid #1e293b !important;
+}
+
+.mat-mdc-tab .mdc-tab__text-label {
+  color: #94a3b8 !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+}
+
+.mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #38bdf8 !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}

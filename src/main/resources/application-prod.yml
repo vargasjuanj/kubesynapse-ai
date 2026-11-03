@@ -1,0 +1,18 @@
+# Perfil: PROD (Despliegue Nativo en Clúster Kubernetes / OpenShift)
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:file:/var/data/kubedb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://mongodb-service.default.svc.cluster.local:27017/kubesynapse_cka}
+  rabbitmq:
+    host: ${RABBITMQ_HOST:rabbitmq-service.default.svc.cluster.local}
+    port: ${RABBITMQ_PORT:5672}
+
+kubesynapse:
+  messaging:
+    rabbitmq:
+      enabled: true

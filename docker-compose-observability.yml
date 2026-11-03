@@ -1,0 +1,35 @@
+services:
+  # ======================================================================================
+  # PILA DE OBSERVABILIDAD COMPLETA: GRAFANA LGTM + OPENTELEMETRY COLLECTOR
+  # ======================================================================================
+  # Provee los 4 pilares de observabilidad en un único contenedor altamente optimizado:
+  # - L (Loki): Agregación y búsqueda de logs distribuidos (LogQL).
+  # - G (Grafana): Dashboards, visualizaciones y alertas (Puerto 3000).
+  # - T (Tempo): Trazabilidad distribuida de extremo a extremo (Trace ID / Span ID).
+  # - M (Mimir / Prometheus): Almacenamiento de series temporales y métricas (PromQL).
+  # + OpenTelemetry Collector: Recibe telemetría en OTLP gRPC (4317) y OTLP HTTP (4318).
+  #
+  # Acceso a Grafana:
+  # URL: http://localhost:3000
+  # Usuario: admin
+  # Contraseña: admin
+  # ======================================================================================
+  grafana-lgtm:
+    image: grafana/otel-lgtm:latest
+    container_name: kubesynapse-lgtm
+    restart: unless-stopped
+    ports:
+      - "3000:3000"   # UI de Grafana
+      - "4317:4317"   # OTLP gRPC (OpenTelemetry Ingestion)
+      - "4318:4318"   # OTLP HTTP (OpenTelemetry Ingestion)
+      - "9090:9090"   # Prometheus compatible endpoint
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - OTEL_METRIC_EXPORT_INTERVAL=5000
+    volumes:
+      - lgtm_data:/data
+
+volumes:
+  lgtm_data:

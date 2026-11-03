@@ -1,0 +1,161 @@
+<div class="console-container">
+  <!-- Alerta RBAC si está en Modo Operador -->
+  <div *ngIf="!authService.isAdmin()" class="rbac-warning font-mono">
+    <mat-icon>gpp_maybe</mat-icon>
+    <span>
+      Modo <strong>ROLE_OPERATOR</strong> activo: la consola de remediación está en modo <strong>Solo Lectura</strong>.
+      Las acciones mutantes directas sobre el clúster están bloqueadas por RBAC. Cambia a <strong>SRE Admin</strong> en la cabecera superior para ejecutar o deshacer operaciones.
+    </span>
+  </div>
+
+  <!-- Panel de Control de Comandos con MatCard -->
+  <mat-card class="control-card">
+    <mat-card-header class="control-header">
+      <div mat-card-avatar class="control-avatar">
+        <mat-icon>terminal</mat-icon>
+      </div>
+      <div class="header-titles">
+        <mat-card-title>Operaciones y Reparación del Clúster</mat-card-title>
+        <mat-card-subtitle>Ejecuta acciones correctivas seguras con soporte de simulación y reversión (Rollback)</mat-card-subtitle>
+      </div>
+
+      <!-- Slide Toggle Dry-Run -->
+      <div class="toggle-wrapper">
+        <mat-slide-toggle [(ngModel)]="dryRun" color="accent">
+          <span class="toggle-text">
+            Modo Dry-Run (Simulación):
+            <strong [class.text-active]="dryRun">{{ dryRun ? 'ACTIVO' : 'INACTIVO' }}</strong>
+          </span>
+        </mat-slide-toggle>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content class="control-content">
+      <div class="actions-grid">
+        <!-- Acción Reinicio de Pod -->
+        <div class="action-box">
+          <div class="action-header">
+            <mat-icon class="icon-action">restart_alt</mat-icon>
+            <h4>Reinicio Seguro de Pod</h4>
+          </div>
+          <div class="inputs-row">
+            <mat-form-field appearance="outline" class="inline-field">
+              <mat-label>Namespace</mat-label>
+              <input matInput [(ngModel)]="restartNamespace" placeholder="default" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="inline-field">
+              <mat-label>Nombre del Pod</mat-label>
+              <input matInput [(ngModel)]="restartPodName" placeholder="demo-oomkilled-service" />
+            </mat-form-field>
+
+            <button
+              mat-flat-button
+              color="primary"
+              class="btn-execute"
+              (click)="triggerRestartPod()"
+              [disabled]="!restartPodName || !authService.isAdmin()"
+              [matTooltip]="authService.isAdmin() ? 'Ejecuta el reinicio en Minikube' : '🔒 Requiere ROLE_ADMIN (Operador solo lectura)'">
+              <mat-icon>{{ authService.isAdmin() ? 'play_arrow' : 'lock' }}</mat-icon>
+              <span>{{ authService.isAdmin() ? 'Reiniciar Pod' : '🔒 Solo ADMIN' }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Botón Undo -->
+        <div class="action-box undo-box">
+          <div class="action-header">
+            <mat-icon class="icon-undo">history</mat-icon>
+            <h4>Deshacer Última Operación (Rollback)</h4>
+          </div>
+          <p class="undo-desc">Revierte la última acción ejecutada para restablecer el estado anterior.</p>
+          <button
+            mat-stroked-button
+            color="warn"
+            class="btn-undo"
+            (click)="onUndo.emit()"
+            [disabled]="!authService.isAdmin()"
+            [matTooltip]="authService.isAdmin() ? 'Deshace el último comando' : '🔒 Requiere ROLE_ADMIN'">
+            <mat-icon>{{ authService.isAdmin() ? 'undo' : 'lock' }}</mat-icon>
+            <span>{{ authService.isAdmin() ? 'Deshacer / Rollback' : '🔒 Solo ADMIN' }}</span>
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tabla de Historial de Auditoría con MatTable -->
+  <mat-card class="history-card">
+    <mat-card-header class="history-header">
+      <div>
+        <mat-card-title>Historial de Operaciones Auditadas</mat-card-title>
+        <mat-card-subtitle>Registro cronológico de operaciones ejecutadas sobre el clúster</mat-card-subtitle>
+      </div>
+      <span class="history-badge font-mono">{{ history.length }} registros auditados</span>
+    </mat-card-header>
+
+    <mat-card-content class="history-content">
+      <table mat-table [dataSource]="history" class="audit-table">
+        <!-- CommandId Column -->
+        <ng-container matColumnDef="commandId">
+          <th mat-header-cell *matHeaderCellDef> ID Comando </th>
+          <td mat-cell *matCellDef="let item" class="font-mono text-cyan"> {{ item.commandId }} </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef> Acción </th>
+          <td mat-cell *matCellDef="let item">
+            <span class="tag-action font-mono">{{ item.action }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Target Column -->
+        <ng-container matColumnDef="target">
+          <th mat-header-cell *matHeaderCellDef> Target </th>
+          <td mat-cell *matCellDef="let item" class="font-mono text-muted"> {{ item.target }} </td>
+        </ng-container>
+
+        <!-- Mode Column -->
+        <ng-container matColumnDef="mode">
+          <th mat-header-cell *matHeaderCellDef> Modo </th>
+          <td mat-cell *matCellDef="let item">
+            <span class="badge-mode font-mono" [class.dryrun]="item.dryRun" [class.real]="!item.dryRun">
+              {{ item.dryRun ? 'DRY-RUN' : 'REAL' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Result Column -->
+        <ng-container matColumnDef="result">
+          <th mat-header-cell *matHeaderCellDef> Resultado </th>
+          <td mat-cell *matCellDef="let item">
+            <span class="status-tag font-mono" [class.success]="item.success" [class.failed]="!item.success">
+              {{ item.success ? 'EXITOSO' : 'FALLO' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Message Column -->
+        <ng-container matColumnDef="message">
+          <th mat-header-cell *matHeaderCellDef> Mensaje / Detalle </th>
+          <td mat-cell *matCellDef="let item"> {{ item.message }} </td>
+        </ng-container>
+
+        <!-- Time Column -->
+        <ng-container matColumnDef="time">
+          <th mat-header-cell *matHeaderCellDef> Hora </th>
+          <td mat-cell *matCellDef="let item" class="text-muted font-mono"> {{ item.executedAt | date:'mediumTime' }} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <div *ngIf="history.length === 0" class="empty-state">
+        <mat-icon class="empty-icon">inbox</mat-icon>
+        <p>No se han registrado operaciones en esta sesión.</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

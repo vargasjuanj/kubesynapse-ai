@@ -1,0 +1,337 @@
+<div class="cka-container">
+  <!-- Barra Superior de Control: Temporizador PSI de 2 Horas, Dominios y Selector de Idioma -->
+  <div class="cka-header">
+    <div class="header-left">
+      <!-- Filtros por Dominio CNCF -->
+      <div class="domain-chips">
+        <button
+          mat-stroked-button
+          [class.active-domain]="selectedDomain === 'ALL'"
+          (click)="filterByDomain('ALL')">
+          🌐 Todos (100%)
+        </button>
+        <button
+          mat-stroked-button
+          [class.active-domain]="selectedDomain === 'TROUBLESHOOTING'"
+          (click)="filterByDomain('TROUBLESHOOTING')">
+          🛠️ Troubleshooting (30%)
+        </button>
+        <button
+          mat-stroked-button
+          [class.active-domain]="selectedDomain === 'CLUSTER_ARCHITECTURE'"
+          (click)="filterByDomain('CLUSTER_ARCHITECTURE')">
+          🏛️ Architecture & RBAC (25%)
+        </button>
+        <button
+          mat-stroked-button
+          [class.active-domain]="selectedDomain === 'SERVICES_AND_NETWORKING'"
+          (click)="filterByDomain('SERVICES_AND_NETWORKING')">
+          🔌 Networking (20%)
+        </button>
+        <button
+          mat-stroked-button
+          [class.active-domain]="selectedDomain === 'WORKLOADS_AND_SCHEDULING'"
+          (click)="filterByDomain('WORKLOADS_AND_SCHEDULING')">
+          📦 Workloads & Sched (15%)
+        </button>
+        <button
+          mat-stroked-button
+          [class.active-domain]="selectedDomain === 'STORAGE'"
+          (click)="filterByDomain('STORAGE')">
+          💾 Storage (10%)
+        </button>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <!-- Cronómetro Oficial CKA PSI (2 Horas = 02:00:00) -->
+      <div class="timer-box" [ngClass]="getTimerUrgencyClass()">
+        <mat-icon class="timer-icon">timer</mat-icon>
+        <div class="timer-digits font-mono">{{ formatTime(remainingSeconds) }}</div>
+        <div class="timer-controls">
+          <button mat-icon-button (click)="toggleTimer()" [matTooltip]="isTimerRunning ? 'Pausar Reloj' : 'Iniciar Reloj de Desafío'">
+            <mat-icon>{{ isTimerRunning ? 'pause' : 'play_arrow' }}</mat-icon>
+          </button>
+          <button mat-icon-button (click)="resetTimer()" matTooltip="Reiniciar a 2 Horas (120 min)">
+            <mat-icon>restart_alt</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Selector de Idioma Bilingüe (EN / ES) -->
+      <div class="lang-switcher">
+        <span class="lang-label font-mono">Modo Idioma:</span>
+        <button
+          mat-button
+          [class.active-lang]="currentLang === 'EN'"
+          (click)="currentLang = 'EN'"
+          class="btn-lang">
+          🇬🇧 English (Technical)
+        </button>
+        <button
+          mat-button
+          [class.active-lang]="currentLang === 'ES'"
+          (click)="currentLang = 'ES'"
+          class="btn-lang">
+          🇪🇸 Español (Estudio)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layout Maestro-Detalle -->
+  <div class="cka-grid">
+    <!-- Columna Izquierda: Lista de Ejercicios -->
+    <div class="exercise-list">
+      <mat-card
+        *ngFor="let ex of filteredExercises"
+        class="exercise-card"
+        [class.selected-card]="selectedExercise?.id === ex.id"
+        (click)="selectExercise(ex)">
+        <mat-card-header>
+          <div class="card-badges">
+            <span class="badge-id font-mono">{{ ex.id }}</span>
+            <span class="badge-points font-mono">+{{ ex.weightPoints }} Pts</span>
+            <span class="badge-diff" [ngClass]="ex.difficulty.toLowerCase()">{{ ex.difficulty }}</span>
+          </div>
+          <mat-card-title class="exercise-title">
+            {{ currentLang === 'EN' ? ex.titleEn : ex.titleEs }}
+          </mat-card-title>
+          <mat-card-subtitle class="font-mono domain-subtitle">
+            {{ ex.domain }} ({{ ex.timeLimitMinutes }} min)
+          </mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    </div>
+
+    <!-- Columna Derecha: Vista Detallada del Ejercicio Activo -->
+    <div class="exercise-detail" *ngIf="selectedExercise">
+      <mat-card class="detail-card">
+        <!-- Header del Detalle -->
+        <div class="detail-header">
+          <div>
+            <div class="detail-meta">
+              <span class="badge-domain font-mono">{{ selectedExercise.domain }}</span>
+              <span class="badge-time font-mono">⏱️ Tiempo sugerido: {{ selectedExercise.timeLimitMinutes }} min</span>
+              <span class="badge-weight font-mono">🏆 Ponderación: {{ selectedExercise.weightPoints }} Puntos</span>
+            </div>
+            <h2 class="detail-title">
+              {{ currentLang === 'EN' ? selectedExercise.titleEn : selectedExercise.titleEs }}
+            </h2>
+          </div>
+          <div class="context-box font-mono">
+            <code>{{ selectedExercise.startingContext }}</code>
+          </div>
+        </div>
+
+        <!-- Enunciado del Escenario Técnico (Inglés o Español) -->
+        <div class="scenario-box">
+          <h3 class="section-title">
+            <mat-icon>assignment</mat-icon>
+            {{ currentLang === 'EN' ? 'Practice Task & Requirements' : 'Consigna y Requisitos del Ejercicio' }}
+          </h3>
+          <p class="scenario-text">
+            {{ currentLang === 'EN' ? selectedExercise.scenarioEn : selectedExercise.scenarioEs }}
+          </p>
+          <div class="resource-targets">
+            <span class="target-item">
+              <strong>Namespace objetivo:</strong> <code class="font-mono">{{ selectedExercise.targetNamespace }}</code>
+            </span>
+            <span class="target-item">
+              <strong>Recurso a intervenir:</strong> <code class="font-mono">{{ selectedExercise.targetResource }}</code>
+            </span>
+          </div>
+        </div>
+
+        <!-- TARJETA DE GUÍA DE FLUJO EN TERMINAL LOCAL (CMD / POWERSHELL / BASH) -->
+        <div class="terminal-guidance-card">
+          <div class="guidance-header">
+            <mat-icon class="guidance-icon">terminal</mat-icon>
+            <h4>¿Cómo resolver este ejercicio en tu computadora? (Flujo del Estudiante)</h4>
+          </div>
+          <div class="guidance-steps">
+            <div class="step-line">
+              <span class="step-num">1</span>
+              <span>Haz clic en el botón <strong>"🧪 Inyectar Laboratorio"</strong> abajo para crear los recursos rotos en Minikube (100% idempotente).</span>
+            </div>
+            <div class="step-line">
+              <span class="step-num">2</span>
+              <span>Abre tu terminal favorita (PowerShell, CMD, Bash o WSL) donde tengas configurado <code>kubectl</code>.</span>
+            </div>
+            <div class="step-line">
+              <span class="step-num">3</span>
+              <div class="step-cmd-row">
+                <span>Fija el namespace de trabajo actual ejecutando:</span>
+                <div class="copy-cmd-box">
+                  <code class="font-mono">kubectl config set-context --current --namespace={{ selectedExercise.targetNamespace }}</code>
+                  <button mat-icon-button class="btn-copy" (click)="copyToClipboard('kubectl config set-context --current --namespace=' + selectedExercise.targetNamespace)" matTooltip="Copiar comando al portapapeles">
+                    <mat-icon>content_copy</mat-icon>
+                  </button>
+                  <button mat-stroked-button class="btn-terminal-launch" (click)="openTerminal()" matTooltip="Abre una ventana PowerShell real en tu escritorio con este contexto">
+                    <mat-icon>terminal</mat-icon> Abrir Terminal
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="step-line">
+              <span class="step-num">4</span>
+              <span>Inspecciona y soluciona el problema usando comandos reales: <code>kubectl describe pod {{ selectedExercise.targetResource }}</code>, <code>kubectl logs</code>, edita los manifiestos y aplícalos.</span>
+            </div>
+            <div class="step-line">
+              <span class="step-num">5</span>
+              <span>Vuelve aquí y haz clic en <strong>"✅ Evaluar Mi Solución (Test CKA)"</strong> para verificar tus aserciones en vivo.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Acciones del Laboratorio -->
+        <div class="actions-toolbar">
+          <!-- Inyectar Laboratorio (Restringido por RBAC a ROLE_ADMIN) -->
+          <button
+            mat-flat-button
+            color="warn"
+            class="btn-action"
+            (click)="injectLab()"
+            [disabled]="isInjecting || !authService.isAdmin()"
+            [matTooltip]="authService.isAdmin() ? 'Inyecta o re-inyecta limpiamente el escenario roto en Minikube' : '🔒 Requiere ROLE_ADMIN (Operador sólo lectura)'">
+            <mat-icon [class.spinning]="isInjecting">{{ authService.isAdmin() ? 'science' : 'lock' }}</mat-icon>
+            <span>{{ isInjecting ? 'Inyectando en Minikube...' : (authService.isAdmin() ? '🧪 Inyectar Laboratorio en Minikube' : '🔒 Solo ADMIN (Inyectar)') }}</span>
+          </button>
+
+          <!-- Evaluar Solución (Restringido por RBAC a ROLE_ADMIN) -->
+          <button
+            mat-flat-button
+            color="primary"
+            class="btn-action"
+            (click)="verifySolution()"
+            [disabled]="isVerifying || !authService.isAdmin()"
+            [matTooltip]="authService.isAdmin() ? 'Evalúa tus aserciones en vivo sobre el clúster' : '🔒 Requiere ROLE_ADMIN (Operador solo lectura)'">
+            <mat-icon [class.spinning]="isVerifying">{{ authService.isAdmin() ? 'fact_check' : 'lock' }}</mat-icon>
+            <span>{{ isVerifying ? 'Evaluando contra clúster...' : (authService.isAdmin() ? '✅ Evaluar Mi Solución (Test CKA)' : '🔒 Solo ADMIN (Evaluar)') }}</span>
+          </button>
+
+          <!-- Limpiar Laboratorio -->
+          <button
+            mat-stroked-button
+            class="btn-reset"
+            (click)="resetLab()"
+            [disabled]="!authService.isAdmin()"
+            [matTooltip]="authService.isAdmin() ? 'Elimina el namespace del laboratorio' : '🔒 Requiere ROLE_ADMIN'">
+            <mat-icon>{{ authService.isAdmin() ? 'delete_sweep' : 'lock' }}</mat-icon>
+            <span>{{ authService.isAdmin() ? 'Limpiar Lab' : '🔒 Solo ADMIN' }}</span>
+          </button>
+        </div>
+
+        <!-- Alerta RBAC para el Operador -->
+        <div *ngIf="!authService.isAdmin()" class="rbac-notice font-mono">
+          <mat-icon>security</mat-icon>
+          <span>Estás en modo <strong>ROLE_OPERATOR</strong> (Sólo lectura). Para inyectar escenarios rotos en Minikube, cambia al perfil <strong>SRE Admin</strong> en la barra superior.</span>
+        </div>
+
+        <!-- Notificación de Inyección Exitosa -->
+        <div *ngIf="injectionResult" class="injection-banner" [class.success]="injectionResult.status === 'INJECTED'">
+          <div class="banner-title">
+            <mat-icon>{{ injectionResult.status === 'INJECTED' ? 'check_circle' : 'error' }}</mat-icon>
+            <strong>{{ injectionResult.message }}</strong>
+          </div>
+          <div *ngIf="injectionResult.resourcesCreated?.length" class="created-resources">
+            <span class="font-mono">Recursos preparados en el clúster:</span>
+            <ul>
+              <li *ngFor="let res of injectionResult.resourcesCreated" class="font-mono">{{ res }}</li>
+            </ul>
+            <div class="cmd-tip font-mono">
+              👉 Comando de inicio rápido: <code>{{ injectionResult.startingCommand }}</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta de Resultados de la Verificación (Automated Grading) -->
+        <div *ngIf="verificationResult" class="grading-card" [class.passed]="verificationResult.passed" [class.failed]="!verificationResult.passed">
+          <div class="grading-header">
+            <div class="grade-score">
+              <mat-icon class="grade-icon">{{ verificationResult.passed ? 'emoji_events' : 'cancel' }}</mat-icon>
+              <div>
+                <h3 class="grade-title">{{ verificationResult.statusMessage }}</h3>
+                <span class="font-mono grade-points">
+                  Puntaje obtenido: {{ verificationResult.scoreEarned }} / {{ verificationResult.maxScore }} pts
+                </span>
+              </div>
+            </div>
+            <button mat-stroked-button class="btn-pdf-download" (click)="downloadPdf()" matTooltip="Descargar reporte imprimible en formato PDF">
+              <mat-icon>picture_as_pdf</mat-icon> Descargar PDF
+            </button>
+          </div>
+
+          <!-- Lista de Aserciones Técnicas Evaluadas en el Clúster -->
+          <div class="checks-list">
+            <div *ngFor="let check of verificationResult.checks" class="check-item" [class.check-passed]="check.passed" [class.check-failed]="!check.passed">
+              <mat-icon class="check-icon">{{ check.passed ? 'check_circle' : 'highlight_off' }}</mat-icon>
+              <div class="check-content">
+                <strong class="check-name">{{ check.checkName }}</strong>
+                <p class="check-msg">{{ check.message }}</p>
+                <div class="check-diff font-mono">
+                  <span>Esperado: <code>{{ check.expected }}</code></span> |
+                  <span>Actual en clúster: <code>{{ check.actual }}</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tips-box" *ngIf="verificationResult.studentTips">
+            <mat-icon>psychology</mat-icon>
+            <span><strong>SRE Best Practice Tip:</strong> {{ verificationResult.studentTips }}</span>
+          </div>
+        </div>
+
+        <!-- Acordeón de Solución Sugerida y Comandos Rápidos (Bloqueado para ROLE_OPERATOR) -->
+        <mat-accordion class="solution-accordion">
+          <mat-expansion-panel class="panel-solution" [disabled]="!authService.isAdmin()" [expanded]="false">
+            <mat-expansion-panel-header>
+              <mat-panel-title class="solution-title">
+                <mat-icon [class.gold-icon]="authService.isAdmin()" [class.lock-icon]="!authService.isAdmin()">
+                  {{ authService.isAdmin() ? 'lightbulb' : 'lock' }}
+                </mat-icon>
+                <span>
+                  {{ currentLang === 'EN' ? 'Suggested Solution & Fast Commands' : 'Solución Sugerida y Comandos de Estudio' }}
+                  <span *ngIf="!authService.isAdmin()" class="lock-tag font-mono"> [🔒 Bloqueado para Operador]</span>
+                </span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="solution-body" *ngIf="authService.isAdmin()">
+              <div class="pro-tip font-mono">
+                💡 <strong>Tip CKA:</strong> {{ currentLang === 'EN' ? selectedExercise.fastExamTipEn : selectedExercise.fastExamTipEs }}
+              </div>
+
+              <h4 class="code-title">Comandos imperativos recomendados en terminal:</h4>
+              <pre class="code-block font-mono">{{ currentLang === 'EN' ? selectedExercise.officialSolutionEn : selectedExercise.officialSolutionEs }}</pre>
+
+              <h4 class="code-title" *ngIf="selectedExercise.yamlSolution">Manifiesto YAML de referencia:</h4>
+              <pre class="code-block font-mono" *ngIf="selectedExercise.yamlSolution">{{ selectedExercise.yamlSolution }}</pre>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- Banner Explicativo de Solución Bloqueada para Operador -->
+        <div *ngIf="!authService.isAdmin()" class="solution-locked-card font-mono">
+          <mat-icon class="locked-banner-icon">shield</mat-icon>
+          <div class="locked-banner-text">
+            <strong>🔒 Solución protegida en Modo Operador / Estudio:</strong>
+            <span> Para simular condiciones de práctica autónoma, las respuestas y comandos imperativos están ocultos. Cambia al perfil <strong>SRE Admin</strong> en la cabecera superior para desbloquearla y consultarla.</span>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- AVISO LEGAL Y DESCARGO DE RESPONSABILIDAD (DISCLAIMER) -->
+  <div class="disclaimer-banner font-mono">
+    <mat-icon class="disclaimer-icon">gavel</mat-icon>
+    <div class="disclaimer-text">
+      <strong>⚖️ Aviso Legal y Descargo de Responsabilidad:</strong>
+      Este simulador es una herramienta de estudio independiente creada por Juan Vargas con fines exclusivamente educativos y de práctica.
+      No está afiliado, avalado ni respaldado por la Cloud Native Computing Foundation (CNCF) ni The Linux Foundation.
+      Las marcas registradas "Kubernetes" y "CKA" pertenecen a sus respectivos titulares. El autor no se responsabiliza por resultados en exámenes de certificación externos.
+    </div>
+  </div>
+</div>

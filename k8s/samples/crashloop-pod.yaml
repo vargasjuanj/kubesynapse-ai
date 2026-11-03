@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-crashloop-service
+  namespace: default
+  labels:
+    app: demo-crashloop
+    tier: backend
+spec:
+  containers:
+    - name: failing-app
+      image: busybox:1.36
+      command: ["/bin/sh", "-c"]
+      args:
+        - "echo '[BOOT] Starting simulated microservice...'; sleep 3; echo '[FATAL] Missing DB credentials or connection timed out!'; exit 1;"
+  restartPolicy: Always

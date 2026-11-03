@@ -1,0 +1,24 @@
+PROPRIETARY & NONCOMMERCIAL EVALUATION LICENSE
+Copyright (c) 2026 Juan Vargas (juanjovargas443377@gmail.com). All rights reserved.
+
+TERMS AND CONDITIONS:
+
+1. GRANT OF PERMISSION:
+Permission is hereby granted to any person, company, recruiter, or engineering team inspecting
+or evaluating this repository to:
+- Review, inspect, and analyze the source code for recruitment, technical evaluation, and educational purposes.
+- Run, build, and test the software in local development environments.
+
+2. STRICT COMMERCIAL AND REDISTRIBUTION PROHIBITIONS:
+Without prior written, express, and signed authorization from Juan Vargas, the following actions are STRICTLY PROHIBITED:
+- Commercial exploitation, resale, relicensing, sublicensing, or renting of this software, in whole or in part.
+- Deployment, hosting, or offering of this software as a public, private, or commercial SaaS / Cloud service.
+- Reproduction, copying, or redistribution of this software or its derivative works for monetary compensation or business promotion.
+- Claiming authorship, patenting, or registering intellectual property rights over any part of this software.
+
+3. EDUCATIONAL DISCLAIMER & LIMITATION OF LIABILITY:
+This software is an independent educational laboratory and study aid.
+IT IS NOT AFFILIATED WITH, ENDORSED BY, NOR SPONSORED BY THE CLOUD NATIVE COMPUTING FOUNDATION (CNCF) NOR THE LINUX FOUNDATION.
+"Kubernetes" and "CKA" are registered trademarks of The Linux Foundation.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHOR (JUAN VARGAS) BE LIABLE FOR ANY CLAIM, DAMAGES, LOSS OF DATA, OR FAILURE IN ANY EXTERNAL CERTIFICATION EXAM OR PROFESSIONAL EVALUATION ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

@@ -1,0 +1,125 @@
+<div class="dashboard-container" *ngIf="overview">
+  <!-- Fila de Tarjetas de Métricas con MatCard -->
+  <div class="metrics-grid">
+    <mat-card class="metric-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon-avatar blue">
+          <mat-icon>dns</mat-icon>
+        </div>
+        <mat-card-title class="metric-title">Nodos Minikube</mat-card-title>
+        <mat-card-subtitle class="metric-sub">{{ overview.nodes.join(', ') }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <span class="metric-value font-mono">{{ overview.nodes.length }}</span>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="metric-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon-avatar purple">
+          <mat-icon>folder_special</mat-icon>
+        </div>
+        <mat-card-title class="metric-title">Namespaces</mat-card-title>
+        <mat-card-subtitle class="metric-sub">Aislados por RBAC</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <span class="metric-value font-mono">{{ overview.namespaces.length }}</span>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="metric-card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon-avatar green">
+          <mat-icon>rocket_launch</mat-icon>
+        </div>
+        <mat-card-title class="metric-title">Pods Activos</mat-card-title>
+        <mat-card-subtitle class="metric-sub">{{ overview.healthyPods }} saludables</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <span class="metric-value font-mono">{{ overview.totalPods }}</span>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="metric-card" [class.alert-card]="overview.troubledPods > 0">
+      <mat-card-header>
+        <div mat-card-avatar class="card-icon-avatar amber">
+          <mat-icon>warning</mat-icon>
+        </div>
+        <mat-card-title class="metric-title">Pods en Alerta</mat-card-title>
+        <mat-card-subtitle class="metric-sub" *ngIf="overview.troubledPods > 0">Requieren IA SRE</mat-card-subtitle>
+        <mat-card-subtitle class="metric-sub" *ngIf="overview.troubledPods === 0">Cluster 100% estable</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <span class="metric-value font-mono" [class.text-alert]="overview.troubledPods > 0">{{ overview.troubledPods }}</span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Tabla de Pods con Angular Material Table -->
+  <mat-card class="table-card">
+    <mat-card-header class="table-header">
+      <div>
+        <mat-card-title>Topología de Cargas de Trabajo (Pods)</mat-card-title>
+        <mat-card-subtitle>Inventario de workloads inspeccionados en Minikube</mat-card-subtitle>
+      </div>
+      <span class="badge-total font-mono">{{ pods.length }} pods</span>
+    </mat-card-header>
+
+    <mat-card-content class="table-content">
+      <table mat-table [dataSource]="pods" class="k8s-table">
+        <!-- Nombre Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Nombre del Pod </th>
+          <td mat-cell *matCellDef="let pod" class="font-mono font-bold pod-name"> {{ pod.name }} </td>
+        </ng-container>
+
+        <!-- Namespace Column -->
+        <ng-container matColumnDef="namespace">
+          <th mat-header-cell *matHeaderCellDef> Namespace </th>
+          <td mat-cell *matCellDef="let pod">
+            <mat-chip class="ns-chip font-mono">{{ pod.namespace }}</mat-chip>
+          </td>
+        </ng-container>
+
+        <!-- Estado Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Fase / Severidad </th>
+          <td mat-cell *matCellDef="let pod">
+            <app-severity-badge [severity]="getPodSeverity(pod)"></app-severity-badge>
+          </td>
+        </ng-container>
+
+        <!-- Reinicios Column -->
+        <ng-container matColumnDef="restarts">
+          <th mat-header-cell *matHeaderCellDef> Reinicios </th>
+          <td mat-cell *matCellDef="let pod" class="font-mono" [class.text-warning]="pod.restartCount > 0">
+            {{ pod.restartCount }}
+          </td>
+        </ng-container>
+
+        <!-- Exit Code Column -->
+        <ng-container matColumnDef="exitCode">
+          <th mat-header-cell *matHeaderCellDef> Exit Code </th>
+          <td mat-cell *matCellDef="let pod">
+            <span *ngIf="pod.lastExitCode" class="exit-code font-mono">Code {{ pod.lastExitCode }}</span>
+            <span *ngIf="!pod.lastExitCode" class="text-muted font-mono">-</span>
+          </td>
+        </ng-container>
+
+        <!-- Acción Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Diagnóstico </th>
+          <td mat-cell *matCellDef="let pod">
+            <button mat-stroked-button color="accent" class="btn-diagnose" (click)="selectPodForDiagnostic(pod)">
+              <mat-icon>psychology</mat-icon>
+              Diagnosticar IA
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.row-troubled]="!row.ready || row.restartCount > 0"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

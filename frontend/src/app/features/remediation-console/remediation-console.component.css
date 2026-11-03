@@ -1,0 +1,249 @@
+.console-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rbac-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #172554;
+  border: 1px solid #1e40af;
+  color: #93c5fd;
+  padding: 0.85rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.rbac-warning mat-icon {
+  color: #60a5fa;
+  font-size: 1.4rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  flex-shrink: 0;
+}
+
+.control-card {
+  border: 1px solid #1e293b !important;
+  padding: 0.5rem 0.25rem;
+}
+
+.control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 1rem;
+}
+
+.control-avatar {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.header-titles {
+  flex: 1;
+}
+
+.toggle-wrapper {
+  margin-left: auto;
+  background: #090d16;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid #1e293b;
+}
+
+.toggle-text {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.text-active {
+  color: #38bdf8;
+}
+
+.control-content {
+  padding-top: 1.25rem !important;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.action-box {
+  background: #090d16;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.action-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.action-header h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.icon-action { color: #38bdf8; }
+.icon-undo { color: #f87171; }
+
+.inputs-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.inline-field {
+  flex: 1;
+  min-width: 160px;
+}
+
+.btn-execute {
+  height: 56px;
+  padding: 0 1.25rem !important;
+  font-weight: 600;
+  border-radius: 8px !important;
+  margin-bottom: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.undo-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.undo-desc {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin-bottom: 1rem;
+}
+
+.btn-undo {
+  align-self: flex-start;
+  border-radius: 8px !important;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.history-card {
+  border: 1px solid #1e293b !important;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1e293b;
+  padding: 1.25rem 1.5rem 0.75rem 1.5rem;
+}
+
+.history-badge {
+  background: #1e293b;
+  color: #94a3b8;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  border: 1px solid #334155;
+}
+
+.history-content {
+  padding: 0 !important;
+  overflow-x: auto;
+}
+
+.audit-table {
+  width: 100%;
+}
+
+.text-cyan { color: #38bdf8; }
+
+.tag-action {
+  background: #1e293b;
+  color: #cbd5e1;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  border: 1px solid #334155;
+}
+
+.badge-mode {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.badge-mode.dryrun {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+.badge-mode.real {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+.status-tag {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.status-tag.success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.status-tag.failed {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.text-muted { color: #64748b; }
+
+.empty-state {
+  padding: 2.5rem;
+  text-align: center;
+  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.empty-icon {
+  font-size: 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #334155;
+}
